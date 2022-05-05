@@ -1,69 +1,69 @@
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class App {
+
+    /**
+     * Created by André da Rocha Souza on 5/5/2022.
+     * 
+     * andredarochasouza.12345@gmail.com
+     */
+
     public static void main(String[] args) throws Exception {
 
         ArrayList<Personagem> dataset = new ArrayList<>();
 
-        dataset.add(new Personagem(10, 2, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(4, 11, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(23, 2, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(99, 4, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(9, 28, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(2, 40, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(70, 3, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(9, 80, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(45, 12, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(39, 49, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(1, 80, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(58, 20, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(38, 51, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(98, 10, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(40, 90, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(100, 1, TipoPersonagemEnum.GUERREIRO));
+        /**
+         * 
+         * Dataset especifica os niveis de habilidades que Magos e Guerreiros têm,
+         * assim realizando a definição da próxima amostra
+         * 
+         */
 
-        Personagem amostra = new Personagem(23, 34, null);
+        dataset.add(new Personagem(10, 2, 20, 0, 8, TipoPersonagemEnum.GUERREIRO));
+        dataset.add(new Personagem(9, 49, 4, 50, 76, TipoPersonagemEnum.MAGO));
+        dataset.add(new Personagem(86, 23, 80, 4, 13, TipoPersonagemEnum.GUERREIRO));
+        dataset.add(new Personagem(65, 9, 98, 10, 3, TipoPersonagemEnum.GUERREIRO));
+        dataset.add(new Personagem(18, 69, 18, 57, 72, TipoPersonagemEnum.MAGO));
+        dataset.add(new Personagem(23, 89, 9, 67, 45, TipoPersonagemEnum.MAGO));
+        dataset.add(new Personagem(76, 12, 98, 20, 2, TipoPersonagemEnum.GUERREIRO));
+        dataset.add(new Personagem(2, 100, 3, 96, 46, TipoPersonagemEnum.MAGO));
 
-        amostra = tipoPersonagem(3, dataset, amostra);
-        System.out.println("Amostra: " + amostra.getTipoPersonagemEnum());
+        Personagem amostra = new Personagem(67, 23, 86, 20, 29, null);
+
+        classificadorKNN(3, dataset, amostra);
 
     }
 
-    static Personagem tipoPersonagem(int k, ArrayList<Personagem> dataset, Personagem amostra) {
-        // TRUE - GUERREIRO
-        // FALSE - MAGO
-        boolean bool = classificadorKNN(k, dataset, amostra);
-        if (bool) {
-            amostra.tipoPersonagemEnum = TipoPersonagemEnum.GUERREIRO;
-            return amostra;
-        } else {
-            amostra.tipoPersonagemEnum = TipoPersonagemEnum.MAGO;
-            return amostra;
-        }
-    }
+    static void classificadorKNN(int k, ArrayList<Personagem> dataset, Personagem amostra) {
 
-    static boolean classificadorKNN(int k, ArrayList<Personagem> dataset, Personagem amostra) {
-        double[] amostraPosicao = new double[2];
+        double[] amostraPosicao = new double[5];
         amostraPosicao[0] = (double) amostra.forca;
         amostraPosicao[1] = (double) amostra.inteligencia;
+        amostraPosicao[2] = (double) amostra.velocidade;
+        amostraPosicao[3] = (double) amostra.poder;
+        amostraPosicao[4] = (double) amostra.tenacidade;
 
         ArrayList<Double> ordenacaoPorDistancia = new ArrayList<>();
 
         for (int i = 0; i < dataset.size(); i++) {
-            double[] treinamentoPosicao = new double[2];
+            double[] treinamentoPosicao = new double[5];
             treinamentoPosicao[0] = (double) dataset.get(i).forca;
             treinamentoPosicao[1] = (double) dataset.get(i).inteligencia;
+            treinamentoPosicao[2] = (double) dataset.get(i).velocidade;
+            treinamentoPosicao[3] = (double) dataset.get(i).poder;
+            treinamentoPosicao[4] = (double) dataset.get(i).tenacidade;
 
             System.out.println("Indice -- " + i + " | Valores euclidianos -- "
                     + distanciaEuclidiana(amostraPosicao, treinamentoPosicao));
+
             ordenacaoPorDistancia.add(distanciaEuclidiana(amostraPosicao, treinamentoPosicao));
         }
 
         System.out.println("------------------------------");
 
+        // Acoplando o indice no calculo euclidiano
         LinkedHashMap<Integer, Double> map = new LinkedHashMap<>();
         for (int i = 0; i < ordenacaoPorDistancia.size(); i++) {
             map.put(i, ordenacaoPorDistancia.get(i));
@@ -100,21 +100,20 @@ public class App {
         System.out.println("------------------------------");
 
         if (sumGuerreiro > sumMago) {
-            return true;
+            System.out.println("Amostra: Guerreiro");
         } else {
-            return false;
+            System.out.println("Amostra: Mago");
         }
     }
 
     static double distanciaEuclidiana(double[] p1, double[] p2) {
 
-        BigDecimal bd1 = new BigDecimal(p1[0]);
-        BigDecimal bd2 = new BigDecimal(p1[1]);
-        BigDecimal bd3 = new BigDecimal(p2[0]);
-        BigDecimal bd4 = new BigDecimal(p2[1]);
+        double bd = 0.0;
 
-        BigDecimal potenciaDecimal = new BigDecimal(
-                Math.pow(bd1.subtract(bd3).doubleValue(), 2) + Math.pow(bd2.subtract(bd4).doubleValue(), 2));
-        return BigDecimal.valueOf(Math.sqrt(potenciaDecimal.doubleValue())).doubleValue();
+        for (int i = 0; i < p2.length; i++) {
+            bd = Math.pow((p1[i] - p2[i]), 2) + bd;
+        }
+
+        return Math.sqrt(bd);
     }
 }
