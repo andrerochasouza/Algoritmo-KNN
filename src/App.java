@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class App {
@@ -8,11 +8,10 @@ public class App {
      * Created by André da Rocha Souza on 5/5/2022.
      * 
      * andredarochasouza.12345@gmail.com
+     * 
      */
 
     public static void main(String[] args) throws Exception {
-
-        ArrayList<Personagem> dataset = new ArrayList<>();
 
         /**
          * 
@@ -21,52 +20,62 @@ public class App {
          * 
          */
 
-        dataset.add(new Personagem(10, 2, 20, 0, 8, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(9, 49, 4, 50, 76, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(86, 23, 80, 4, 13, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(65, 9, 98, 10, 3, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(18, 69, 18, 57, 72, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(23, 89, 9, 67, 45, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(76, 12, 98, 20, 2, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(2, 100, 3, 96, 46, TipoPersonagemEnum.MAGO));
+        ArrayList<int[]> dataset = new ArrayList<>();
 
-        Personagem amostra = new Personagem(67, 23, 86, 20, 29, null);
+        int a[] = { 1, 1, 3, 4, 5, 1 };
+        int b[] = { 2, 1, 4, 5, 5, 1 };
+        int c[] = { 1, 2, 5, 4, 3, 1 };
+        int d[] = { 1, 2, 5, 5, 5, 1 };
+        int e[] = { 5, 4, 2, 1, 1, 0 };
+        int f[] = { 4, 5, 1, 1, 2, 0 };
+        int g[] = { 5, 5, 1, 1, 1, 0 };
+
+        dataset.add(a);
+        dataset.add(b);
+        dataset.add(c);
+        dataset.add(d);
+        dataset.add(e);
+        dataset.add(f);
+        dataset.add(g);
+
+        int[] amostra = { 3, 3, 2, 1, 1};
 
         classificadorKNN(3, dataset, amostra);
 
     }
 
-    static void classificadorKNN(int k, ArrayList<Personagem> dataset, Personagem amostra) {
 
-        double[] amostraPosicao = new double[5];
-        amostraPosicao[0] = (double) amostra.forca;
-        amostraPosicao[1] = (double) amostra.inteligencia;
-        amostraPosicao[2] = (double) amostra.velocidade;
-        amostraPosicao[3] = (double) amostra.poder;
-        amostraPosicao[4] = (double) amostra.tenacidade;
 
-        ArrayList<Double> ordenacaoPorDistancia = new ArrayList<>();
+    static ArrayList<Double> calcularDataset(ArrayList<int[]> dataset, int[] amostra) {
+
+        ArrayList<Double> calculoDatasetEuclidiano = new ArrayList<>();
 
         for (int i = 0; i < dataset.size(); i++) {
-            double[] treinamentoPosicao = new double[5];
-            treinamentoPosicao[0] = (double) dataset.get(i).forca;
-            treinamentoPosicao[1] = (double) dataset.get(i).inteligencia;
-            treinamentoPosicao[2] = (double) dataset.get(i).velocidade;
-            treinamentoPosicao[3] = (double) dataset.get(i).poder;
-            treinamentoPosicao[4] = (double) dataset.get(i).tenacidade;
+
+            int[] treinamentoPosicao = new int[dataset.get(0)[0] - 1];
+            for (int j = 0; j < dataset.get(0)[0] - 1; j++) {
+                treinamentoPosicao[j] = dataset.get(i)[j];
+            }
 
             System.out.println("Indice -- " + i + " | Valores euclidianos -- "
-                    + distanciaEuclidiana(amostraPosicao, treinamentoPosicao));
+                    + distanciaEuclidiana(amostra, treinamentoPosicao));
 
-            ordenacaoPorDistancia.add(distanciaEuclidiana(amostraPosicao, treinamentoPosicao));
+            calculoDatasetEuclidiano.add(distanciaEuclidiana(amostra, treinamentoPosicao));
         }
 
         System.out.println("------------------------------");
+        return calculoDatasetEuclidiano;
+    }
 
-        // Acoplando o indice no calculo euclidiano
-        LinkedHashMap<Integer, Double> map = new LinkedHashMap<>();
-        for (int i = 0; i < ordenacaoPorDistancia.size(); i++) {
-            map.put(i, ordenacaoPorDistancia.get(i));
+
+
+
+    static HashMap<Integer, Double> mapeamentoHash(ArrayList<Double> listaCalculosEuclidiano) {
+
+        // Acoplando o indice no valores (calculo euclidiano)
+        HashMap<Integer, Double> map = new HashMap<>();
+        for (int i = 0; i < listaCalculosEuclidiano.size(); i++) {
+            map.put(i, listaCalculosEuclidiano.get(i));
         }
 
         // Printando o mapa de forma ordenada
@@ -76,21 +85,30 @@ public class App {
 
         System.out.println("------------------------------");
 
+        return map;
+
+    }
+
+    static void classificadorKNN(int k, ArrayList<int[]> dataset, int[] amostra) {
+
+        // Mapeando os calculos euclidianos pela sequência do dataset
+        HashMap<Integer, Double> map = mapeamentoHash(calcularDataset(dataset, amostra));
+
+
         // Pegando os indices dos k primeiros e coletando os tipos de personagem
         map = map.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .limit(k)
-                .collect(LinkedHashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), Map::putAll);
+                .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), Map::putAll);
 
         int sumGuerreiro = 0;
         int sumMago = 0;
 
         for (Map.Entry<Integer, Double> entry : map.entrySet()) {
 
-            System.out.println("Indice -- " + entry.getKey() + " | Valor -- " + entry.getValue() + " | Personagem -- "
-                    + dataset.get(entry.getKey()).getTipoPersonagemEnum());
+            System.out.println("Indice -- " + entry.getKey() + " | Valor -- " + entry.getValue() + " | Personagem -- " + dataset.get(entry.getKey())[5]);
 
-            if (dataset.get(entry.getKey()).tipoPersonagemEnum == TipoPersonagemEnum.GUERREIRO) {
+            if (dataset.get(entry.getKey())[5] == 0) {
                 sumGuerreiro++;
             } else {
                 sumMago++;
@@ -106,7 +124,7 @@ public class App {
         }
     }
 
-    static double distanciaEuclidiana(double[] p1, double[] p2) {
+    static double distanciaEuclidiana(int[] p1, int[] p2) {
 
         double bd = 0.0;
 
