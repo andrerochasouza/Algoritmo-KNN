@@ -1,5 +1,8 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class App {
@@ -12,8 +15,6 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        ArrayList<Personagem> dataset = new ArrayList<>();
-
         /**
          * 
          * Dataset especifica os niveis de habilidades que Magos e Guerreiros têm,
@@ -21,47 +22,44 @@ public class App {
          * 
          */
 
-        dataset.add(new Personagem(10, 2, 20, 0, 8, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(9, 49, 4, 50, 76, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(86, 23, 80, 4, 13, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(65, 9, 98, 10, 3, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(18, 69, 18, 57, 72, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(23, 89, 9, 67, 45, TipoPersonagemEnum.MAGO));
-        dataset.add(new Personagem(76, 12, 98, 20, 2, TipoPersonagemEnum.GUERREIRO));
-        dataset.add(new Personagem(2, 100, 3, 96, 46, TipoPersonagemEnum.MAGO));
+        int a[] = { 1, 1, 3, 4, 5, 1 };
+        int b[] = { 2, 1, 4, 5, 5, 1 };
+        int c[] = { 1, 2, 5, 4, 3, 1 };
+        int d[] = { 1, 2, 5, 5, 5, 1 };
+        int e[] = { 5, 4, 2, 1, 1, 0 };
+        int f[] = { 4, 5, 1, 1, 2, 0 };
+        int g[] = { 5, 5, 1, 1, 1, 0 };
 
-        Personagem amostra = new Personagem(67, 23, 86, 20, 29, null);
+        ArrayList<int[]> dataset = new ArrayList<>();
+
+        int[] amostra = { 3, 3, 2, 1, 1 };
 
         classificadorKNN(3, dataset, amostra);
 
     }
 
-    static void classificadorKNN(int k, ArrayList<Personagem> dataset, Personagem amostra) {
+    static ArrayList<Double> calcularDataset(ArrayList<int[]> dataset, int[] amostra) {
 
-        double[] amostraPosicao = new double[5];
-        amostraPosicao[0] = (double) amostra.forca;
-        amostraPosicao[1] = (double) amostra.inteligencia;
-        amostraPosicao[2] = (double) amostra.velocidade;
-        amostraPosicao[3] = (double) amostra.poder;
-        amostraPosicao[4] = (double) amostra.tenacidade;
-
-        ArrayList<Double> ordenacaoPorDistancia = new ArrayList<>();
+        ArrayList<Double> calculoDatasetEuclidiano = new ArrayList<>();
 
         for (int i = 0; i < dataset.size(); i++) {
-            double[] treinamentoPosicao = new double[5];
-            treinamentoPosicao[0] = (double) dataset.get(i).forca;
-            treinamentoPosicao[1] = (double) dataset.get(i).inteligencia;
-            treinamentoPosicao[2] = (double) dataset.get(i).velocidade;
-            treinamentoPosicao[3] = (double) dataset.get(i).poder;
-            treinamentoPosicao[4] = (double) dataset.get(i).tenacidade;
+
+            int[] treinamentoPosicao = new int[dataset.size() - 1];
+            for (int j = 0; j < (dataset.size() - 1); j++) {
+                treinamentoPosicao[j] = dataset.get(i)[j];
+            }
 
             System.out.println("Indice -- " + i + " | Valores euclidianos -- "
-                    + distanciaEuclidiana(amostraPosicao, treinamentoPosicao));
+                    + distanciaEuclidiana(amostra, treinamentoPosicao));
 
-            ordenacaoPorDistancia.add(distanciaEuclidiana(amostraPosicao, treinamentoPosicao));
+            calculoDatasetEuclidiano.add(distanciaEuclidiana(amostra, treinamentoPosicao));
         }
 
         System.out.println("------------------------------");
+        return calculoDatasetEuclidiano;
+    }
+
+    static void classificadorKNN(int k, ArrayList<int[]> dataset, int[] amostra) {
 
         // Acoplando o indice no calculo euclidiano
         LinkedHashMap<Integer, Double> map = new LinkedHashMap<>();
@@ -106,7 +104,7 @@ public class App {
         }
     }
 
-    static double distanciaEuclidiana(double[] p1, double[] p2) {
+    static double distanciaEuclidiana(int[] p1, int[] p2) {
 
         double bd = 0.0;
 
