@@ -57,7 +57,21 @@ public class MetodosKNN {
 
     }
 
-    static ArrayList<Double> calcularDataset(ArrayList<int[]> dataset, int[] amostra) {
+    /**
+     * 
+     * Método estático que retorna uma tabela hash mapeada, com indices dos dados em
+     * sequência do dataset, e os valores
+     * doubles que foram calculados pela distancia entre a amostra e o dado do
+     * dataset.
+     * 
+     * @Author andre.rsouza
+     * 
+     * 
+     *         ARRUMAR MÉTODO - FOCO NO STRING[] DO DATASET E AMOSTRA
+     * 
+     */
+
+    static ArrayList<Double> calcularDataset(ArrayList<String[]> dataset, String[] amostra) {
 
         ArrayList<Double> calculoDatasetEuclidiano = new ArrayList<>();
 

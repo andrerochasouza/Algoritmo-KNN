@@ -6,16 +6,12 @@ public class App {
      * Created by André da Rocha Souza on 5/5/2022.
      * 
      * andredarochasouza.12345@gmail.com
+     * 
+     * @Author andre.rsouza
+     * 
      */
 
     public static void main(String[] args) throws Exception {
-
-        /**
-         * 
-         * Dataset especifica os niveis de habilidades que Magos e Guerreiros têm,
-         * assim realizando a definição da próxima amostra
-         * 
-         */
 
         ArrayList<int[]> dataset = new ArrayList<>();
 
