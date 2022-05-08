@@ -1,4 +1,3 @@
-
 /**
  * 
  * Criado por André da Rocha Souza em 5/5/2022.
@@ -66,7 +65,7 @@ public class KNN {
      * 
      */
 
-    static double distanciaEuclidiana(double[] p1, double[] p2) {
+    static Double distanciaEuclidiana(Double[] p1, Double[] p2) {
 
         double bd = 0.0;
 
@@ -94,13 +93,13 @@ public class KNN {
      * 
      */
 
-    static ArrayList<Double> calcularDatasetPelaAmostra(ArrayList<double[]> dataset, double[] amostra) {
+    static ArrayList<Double> calcularDatasetPelaAmostra(ArrayList<Double[]> dataset, Double[] amostra) {
 
         ArrayList<Double> calculoDatasetEuclidiano = new ArrayList<>();
 
         for (int i = 0; i < dataset.size(); i++) {
 
-            double[] treinamentoPosicao = new double[amostra.length];
+            Double[] treinamentoPosicao = new Double[amostra.length];
             for (int j = 0; j < amostra.length; j++) {
                 treinamentoPosicao[j] = dataset.get(i)[j];
             }
@@ -123,7 +122,7 @@ public class KNN {
      * 
      */
 
-    static HashMap<Integer, Double> mapeandoEuclidiano(ArrayList<Double> arrCalculosEuclidianos) {
+    static HashMap<Integer, Double> mapaEuclidiano(ArrayList<Double> arrCalculosEuclidianos) {
 
         // Acoplando o indice no calculo euclidiano
         HashMap<Integer, Double> map = new HashMap<>();
@@ -150,9 +149,9 @@ public class KNN {
      * 
      */
 
-    static void classificadorKNN(int k, ArrayList<int[]> dataset, int[] amostra) {
+    static void classificadorKNN(int k, ArrayList<Double[]> dataset, Double[] amostra) {
 
-        HashMap<Integer, Double> map = mapeandoEuclidiano(calcularDataset(dataset, amostra));
+        HashMap<Integer, Double> map = mapaEuclidiano(calcularDatasetPelaAmostra(dataset, amostra));
 
         // Pegando os indices dos k primeiros e coletando os tipos de personagem
         map = map.entrySet().stream()

@@ -13,15 +13,15 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        ArrayList<int[]> dataset = new ArrayList<>();
+        ArrayList<Double[]> dataset = new ArrayList<>();
 
-        int a[] = { 1, 1, 3, 4, 5, 1 };
-        int b[] = { 2, 1, 4, 5, 5, 1 };
-        int c[] = { 1, 2, 5, 4, 3, 1 };
-        int d[] = { 1, 2, 5, 5, 5, 1 };
-        int e[] = { 5, 4, 2, 1, 1, 0 };
-        int f[] = { 4, 5, 1, 1, 2, 0 };
-        int g[] = { 5, 5, 1, 1, 1, 0 };
+        Double a[] = { 1.0, 1.0, 3.0, 4.0, 5.0, 1.0 };
+        Double b[] = { 2.0, 1.0, 4.0, 5.0, 5.0, 1.0 };
+        Double c[] = { 1.0, 2.0, 5.0, 4.0, 3.0, 1.0 };
+        Double d[] = { 1.0, 2.0, 5.0, 5.0, 5.0, 1.0 };
+        Double e[] = { 5.0, 4.0, 2.0, 1.0, 1.0, 0.0 };
+        Double f[] = { 4.0, 5.0, 1.0, 1.0, 2.0, 0.0 };
+        Double g[] = { 5.0, 5.0, 1.0, 1.0, 1.0, 0.0 };
 
         dataset.add(a);
         dataset.add(b);
@@ -31,9 +31,9 @@ public class App {
         dataset.add(f);
         dataset.add(g);
 
-        int[] amostra = { 3, 3, 2, 1, 1 };
+        Double[] amostra = { 3.0, 3.0, 2.0, 1.0, 1.0 };
 
-        MetodosKNN.classificadorKNN(3, dataset, amostra);
+        KNN.classificadorKNN(3, dataset, amostra);
 
     }
 }
