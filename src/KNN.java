@@ -31,7 +31,7 @@ public class KNN {
      * 
      */
 
-    static ArrayList<String[]> carregarDatasetemCSV(String pathArquive) throws Exception {
+    static ArrayList<String[]> carregarDatasetCSV(String pathArquive) throws Exception {
 
         if (pathArquive == null) {
             try {
@@ -45,7 +45,7 @@ public class KNN {
                         System.out.println("Erro ao ler a linha do arquivo, Erro: " + e.getMessage());
                     }
                 });
-
+                arq.remove(0);
                 arquive.close();
                 return arq;
 
@@ -195,5 +195,4 @@ public class KNN {
             return 0.0;
         }
     }
-
 }
