@@ -1,3 +1,4 @@
+
 /**
  * 
  * Criado por André da Rocha Souza em 5/5/2022.
@@ -12,7 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class KNN {
@@ -23,11 +23,15 @@ public class KNN {
      * e
      * retorna uma lista de frases do tipo array de strings.
      * 
+     * Para utilizar este método, é necessário que o arquivo CSV esteja em ordem
+     * padrão (coluna 1, coluna 2, ..., coluna n)
+     * em fatores de pesos, sendo a ultima coluna o valor do tipo.
+     * 
      * @Author andre.rsouza
      * 
      */
 
-    static ArrayList<String[]> loadDataset(String pathArquive) throws Exception {
+    static ArrayList<String[]> carregarDatasetemCSV(String pathArquive) throws Exception {
 
         if (pathArquive == null) {
             try {
@@ -104,7 +108,9 @@ public class KNN {
                 treinamentoPosicao[j] = dataset.get(i)[j];
             }
 
-            System.out.println("Indice -- " + i + " | Valores euclidianos -- " + distanciaEuclidiana(amostra, treinamentoPosicao));
+            System.out.println(
+                    "Indice -- " + i + " | Distancias euclidianos -- "
+                            + distanciaEuclidiana(amostra, treinamentoPosicao));
             calculoDatasetEuclidiano.add(distanciaEuclidiana(amostra, treinamentoPosicao));
 
         }
@@ -142,44 +148,51 @@ public class KNN {
 
     /**
      * 
-     * Método estático que retorna uma tabela hash, indicando cada valor com um
-     * indice.
+     * Método estático que classfica a amostra de acordo com o dataset pelos k
+     * vizinhos mais proximos.
+     * 
+     * Retorna 1 ou 0, sendo que o resultado indica o que a amotra se classifica
+     * pelos k-vizinhos.
      * 
      * @Author andre.rsouza
      * 
      */
 
-    static void classificadorKNN(int k, ArrayList<Double[]> dataset, Double[] amostra) {
+    static Double classificadorKNN(int k, ArrayList<Double[]> dataset, Double[] amostra) {
 
         HashMap<Integer, Double> map = mapaEuclidiano(calcularDatasetPelaAmostra(dataset, amostra));
 
-        // Pegando os indices dos k primeiros e coletando os tipos de personagem
         map = map.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .limit(k)
                 .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), Map::putAll);
 
-        int sumGuerreiro = 0;
-        int sumMago = 0;
+        int sumOne = 0;
+        int sumZero = 0;
 
+        System.out.println("Indices e distancias dos vizinhos mais próximos");
         for (Map.Entry<Integer, Double> entry : map.entrySet()) {
 
-            System.out.println("Indice -- " + entry.getKey() + " | Valor -- " + entry.getValue() + " | Personagem -- "
-                    + dataset.get(entry.getKey())[5]);
+            System.out.println("Indice -- " + entry.getKey() + " | Distancia -- " + entry.getValue()
+                    + " | Classificação -- " + dataset.get(entry.getKey())[amostra.length]);
 
-            if (dataset.get(entry.getKey())[5] == 0) {
-                sumGuerreiro++;
+            if (dataset.get(entry.getKey())[amostra.length] == 1) {
+                sumOne++;
             } else {
-                sumMago++;
+                sumZero++;
             }
         }
 
         System.out.println("------------------------------");
+        System.out.println("Quantidade de vizinhos próximos classificados como 1: " + sumOne);
+        System.out.println("------------------------------");
+        System.out.println("Quantidade de vizinhos próximos classificados como 0: " + sumZero);
+        System.out.println("------------------------------");
 
-        if (sumGuerreiro > sumMago) {
-            System.out.println("Amostra: Guerreiro");
+        if (sumOne > sumZero) {
+            return 1.0;
         } else {
-            System.out.println("Amostra: Mago");
+            return 0.0;
         }
     }
 
