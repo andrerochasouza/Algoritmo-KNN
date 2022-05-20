@@ -1,6 +1,6 @@
 # Classificador K-NN  em Java (Estudos)
 
-O [K-NN](https://github.com/andrerochasouza/Algoritmo-KNN) é um projeto pessoal, onde aplico na prática um algoritmo simples, porém muito interessante, que é o algoritmo de aprendizado de máquina, classficador K-NN.
+O algoritmo [K-nn](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) é um projeto pessoal de estudo, onde aplico simples algoritmo, porém muito interessante, que é o algoritmo de aprendizado de máquina, classficador K nearest neighbor.
 
 Algoritmo K-NN é um classificador que depende dos valores dos seus vizinhos mais próximos, para assim, aplicar a classificação na amostra concedida.
 
