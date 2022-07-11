@@ -14,7 +14,7 @@ Após, compilar e inicializar o projeto pelo arquivo *App.java*
 
 ## Dados
 
-Podemos utilizar duas formas os dados para a classificação:
+Podemos utilizar duas formas de dados para a classificação:
 
 | Dados |
 |---|
